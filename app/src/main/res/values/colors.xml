@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#4aa9fd</color>
+    <color name="colorPrimaryDark">#00314f</color>
+    <color name="colorAccent">#030d4b</color>
+    <color name="textColorLight">#f0f0f0</color>
+    <color name="textColorSecondary">#757575</color>
+    <color name="windowBackground">#fff</color>
+    <color name="dividerColor">#bdbdbd</color>
+
+    <color name="colorTab">#4aa9fd</color>
+
+    <color name="blue2">#005082</color>
+    <color name="blue3">#00314f</color>
+    <color name="blue4">#86c8ff</color>
+    <color name="blue5">#092337</color>
+    <color name="blue6">#044a92</color>
+    <color name="blue7">#030d4b</color>
+    <color name="blue8">#4ca9f8</color>
+
+    <color name="textColorDark">#5f6163</color>
+    <color name="color">#adb0b4</color>
+    <color name="item_background">#f0f0f0</color>
+    <color name="video_duration_background">#7b000000</color>
+    <color name="color2">#a1a1a1</color>
+
 </resources>
