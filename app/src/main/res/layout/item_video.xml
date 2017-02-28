@@ -3,16 +3,16 @@
     android:id="@+id/layoutItem"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@color/item_background"
+    android:background="@android:color/white"
     android:orientation="horizontal"
     android:padding="8dp">
 
     <ImageView
         android:id="@+id/ivVidPreview"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:src="@drawable/video_preview" />
+        android:src="@drawable/img_video" />
 
     <TextView
         android:id="@+id/tvDuration"
@@ -22,7 +22,7 @@
         android:background="@color/video_duration_background"
         android:gravity="center"
         android:text="00:00:00"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/textColorLight" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sample file name"
-            android:textColor="@color/textColorDark" />
+            android:textColor="@color/textColorBlack" />
 
         <TextView
             android:id="@+id/tvFileSize"
@@ -51,9 +51,10 @@
     <ImageView
         android:id="@+id/ivSelected"
         android:layout_width="20dp"
-        android:layout_height="20dp" android:visibility="invisible"
-        android:src="@drawable/item_selected"
-        android:layout_centerVertical="true"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_centerVertical="true"
+        android:src="@drawable/item_selected"
+        android:visibility="invisible" />
 </RelativeLayout>

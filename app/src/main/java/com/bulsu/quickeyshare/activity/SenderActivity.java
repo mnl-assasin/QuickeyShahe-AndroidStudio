@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -27,6 +29,8 @@ import butterknife.ButterKnife;
 public class SenderActivity extends AppCompatActivity {
 
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
     @Bind(R.id.tvCode)
     TextView tvCode;
     @Bind(R.id.tvTimeLapsed)
@@ -35,6 +39,7 @@ public class SenderActivity extends AppCompatActivity {
     LinearLayout layoutShareStarted;
     @Bind(R.id.activity_sender)
     LinearLayout activitySender;
+
 
     private Handler customHandler = new Handler();
 
@@ -53,16 +58,31 @@ public class SenderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sender);
         ButterKnife.bind(this);
 
+        initToolbar();
         initCode();
         initSocketServer();
 
 //        startTimer();
     }
 
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(serverSocket != null){
+        if (serverSocket != null) {
             try {
                 serverSocket.close();
             } catch (IOException e) {
@@ -175,12 +195,19 @@ public class SenderActivity extends AppCompatActivity {
     private void startTimer() {
         startTime = SystemClock.uptimeMillis();
         customHandler.post(updateTimerThread);
+
+
     }
 
     private void pauseTimer() {
         timeSwapBuff += timeInMilliseconds;
         customHandler.removeCallbacks(updateTimerThread);
-
+        File file = new File(Const.DEFAULT_ZIP_PATH);
+        if (file.exists())
+            if (file.delete())
+                Log.d("FileTransfer", "File deleted");
+            else
+                Log.d("FileTransfer", "Something went wrong");
     }
 
     private Runnable updateTimerThread = new Runnable() {

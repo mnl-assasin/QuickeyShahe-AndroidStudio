@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -36,6 +38,8 @@ public class ReceiverActivity extends AppCompatActivity {
     Button btnConnect;
     @Bind(R.id.tvTimeLapsed)
     TextView tvTimeLapsed;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     private Handler customHandler = new Handler();
 
@@ -50,6 +54,22 @@ public class ReceiverActivity extends AppCompatActivity {
         setContentView(R.layout.activity_receiver);
         ButterKnife.bind(this);
 
+        initToolbar();
+
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -138,15 +158,25 @@ public class ReceiverActivity extends AppCompatActivity {
 
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            startProgressDialog();
+        }
+
+        @Override
         protected Void doInBackground(Void... voids) {
 
             String path = Const.DEFAULT_FOLDER_PATH + File.separator;
-            if (ZipHelper.decompress(path, Const.COMPRESS_ZIP))
-            Log.d(TAG, "Decompress success");
-//                Toast.makeText(getApplicationContext(), "Files received. Checked it at QuickeyShare folder", Toast.LENGTH_LONG).show();
-            else
-            Log.d(TAG, "Decompress fail");
-//                Toast.makeText(getApplicationContext(), "Something went wrong! Please try again.", Toast.LENGTH_LONG).show();
+            if (ZipHelper.decompress(path, Const.COMPRESS_ZIP)) {
+                File file = new File(Const.DEFAULT_ZIP_PATH);
+                if (file.exists())
+                    if (file.delete())
+                        Log.d("FileTransfer", "File deleted");
+                    else
+                        Log.d("FileTransfer", "Something went wrong");
+            } else {
+                Log.d("FileTransfer", "Something went wrong");
+            }
             return null;
         }
 

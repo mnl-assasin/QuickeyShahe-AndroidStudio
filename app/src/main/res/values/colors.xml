@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#4aa9fd</color>
-    <color name="colorPrimaryDark">#00314f</color>
+    <color name="colorPrimaryDark">#2397fc</color>
     <color name="colorAccent">#030d4b</color>
     <color name="textColorLight">#f0f0f0</color>
     <color name="textColorSecondary">#757575</color>
@@ -20,7 +20,8 @@
 
     <color name="textColorDark">#5f6163</color>
     <color name="color">#adb0b4</color>
-    <color name="item_background">#f0f0f0</color>
+    <color name="textColorBlack">#000</color>
+    <color name="item_background">#fff</color>
     <color name="video_duration_background">#7b000000</color>
     <color name="color2">#a1a1a1</color>
 

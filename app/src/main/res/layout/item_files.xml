@@ -2,18 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/layoutItem"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
+    android:layout_height="wrap_content"
     android:background="@color/item_background"
     android:orientation="horizontal"
     android:padding="8dp">
 
     <ImageView
         android:id="@+id/ivPreview"
-        android:layout_width="100dp"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:src="@drawable/video_preview" />
-
+        android:src="@drawable/img_file" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sample file name"
-            android:textColor="@color/textColorDark" />
+            android:textColor="@color/textColorBlack" />
 
         <TextView
             android:id="@+id/tvFileSize"
@@ -36,7 +35,6 @@
             android:layout_height="wrap_content"
             android:text="7.2 MB"
             android:textColor="@color/textColorSecondary" />
-
     </LinearLayout>
 
     <ImageView

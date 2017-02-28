@@ -50,17 +50,17 @@ public class FileHelper {
         Cursor cursor;
         int column_index_data, column_index_folder_name;
         String PathOfImage = null;
-        uri = android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-
+//        uri = android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+        uri = android.provider.MediaStore.Files.getContentUri("external");
         String[] projection = {MediaStore.MediaColumns.DATA,
-                MediaStore.Files.FileColumns.MEDIA_TYPE};
+                MediaStore.Files.FileColumns.DISPLAY_NAME};
 
         cursor = activity.getContentResolver().query(uri, projection, null,
                 null, null);
 
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         column_index_folder_name = cursor
-                .getColumnIndexOrThrow(MediaStore.Files.FileColumns.MEDIA_TYPE);
+                .getColumnIndexOrThrow(MediaStore.Files.FileColumns.DISPLAY_NAME);
         while (cursor.moveToNext()) {
             PathOfImage = cursor.getString(column_index_data);
 
