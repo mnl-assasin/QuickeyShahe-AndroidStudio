@@ -11,17 +11,26 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bulsu.quickeyshare.R;
+import com.bulsu.quickeyshare.data.Const;
 import com.bulsu.quickeyshare.data.EZSharedPrefences;
+import com.bulsu.quickeyshare.data.FileHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,7 +52,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     String TAG = MainActivity.class.getSimpleName();
 
@@ -58,6 +67,29 @@ public class MainActivity extends AppCompatActivity {
     ImageView ivReceive;
     @Bind(R.id.activity_main)
     RelativeLayout activityMain;
+    @Bind(R.id.navigationView)
+    NavigationView navigationView;
+    @Bind(R.id.drawerLayout)
+    DrawerLayout drawerLayout;
+
+    ActionBarDrawerToggle actionBarDrawerToggle;
+    @Bind(R.id.ivDrawer)
+    ImageView ivDrawer;
+    @Bind(R.id.ivHistory)
+    ImageView ivHistory;
+    @Bind(R.id.tvReceived)
+    TextView tvReceived;
+    @Bind(R.id.containerReceived)
+    LinearLayout containerReceived;
+    @Bind(R.id.tvData)
+    TextView tvData;
+    @Bind(R.id.tvLockedFiles)
+    TextView tvLockedFiles;
+    @Bind(R.id.containerData)
+    LinearLayout containerData;
+    @Bind(R.id.containerLockFiles)
+    LinearLayout containerLockFiles;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +98,75 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         checkPermissions();
-        test();
+        initialized();
 
+
+    }
+
+    private void initialized() {
+        setupNavigation();
+
+
+    }
+
+    private void initData() {
+        File fileDirectory = new File(Const.DEFAULT_FOLDER_PATH);
+        File[] dirFiles = null;
+
+        if (fileDirectory != null)
+            if (fileDirectory.exists())
+                dirFiles = fileDirectory.listFiles();
+
+        if (dirFiles != null)
+            if (dirFiles.length > 0) {
+                tvReceived.setText(String.valueOf(dirFiles.length));
+                tvData.setText(FileHelper.getTotalFileSize(dirFiles));
+            }
+        Log.d(TAG, "Count: " + dirFiles.length);
+
+    }
+
+    private void setupNavigation() {
+        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setItemIconTintList(null);
+
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.app_name, R.string.app_name) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+//                fragmentFrame.setTranslationX(slideOffset * drawerView.getWidth());
+//                drawerLayout.bringChildToFront(fragmentFrame);
+//                drawerLayout.requestLayout();
+            }
+        };
+
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        item.setChecked(false);
+        switch (item.getItemId()) {
+            case R.id.menu_about:
+                startActivity(new Intent(getApplicationContext(), AboutActivity.class));
+                break;
+        }
+
+        drawerLayout.closeDrawers();
+
+        return true;
     }
 
     private void checkPermissions() {
@@ -132,10 +231,9 @@ public class MainActivity extends AppCompatActivity {
 //            editor.putBoolean(REQUIRED_PERMISSIONS[0],true);
 //            editor.commit();
         } else {
-            //You already have the permission, just go ahead.
-//            proceedAfterPermission();
+
             Log.d(TAG, "Proceed to after permission process");
-//            proceedAfterPermission();
+            initData();
         }
     }
 
@@ -159,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
             if (allgranted) {
                 Log.d(TAG, mTAG + "Proceed to after permission process");
 //                proceedAfterPermission();
+                initData();
             } else if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[0])
                     || ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[1])) {
                 //txtPermissions.setText("Permissions Required");
@@ -195,6 +294,7 @@ public class MainActivity extends AppCompatActivity {
 //                proceedAfterPermission();
                 Log.d(TAG, "onActivityResult: proceed to after permission process");
 //                proceedAfterPermission();
+                initData();
 
             }
         }
@@ -328,14 +428,26 @@ public class MainActivity extends AppCompatActivity {
         return iv;
     }
 
-    @OnClick({R.id.ivSend, R.id.ivReceive})
+
+    @OnClick({R.id.ivDrawer, R.id.ivHistory, R.id.ivSend, R.id.ivReceive, R.id.tvReceived, R.id.containerReceived, R.id.containerData, R.id.containerLockFiles})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.ivDrawer:
+                drawerLayout.openDrawer(GravityCompat.START);
+                break;
+
             case R.id.ivSend:
                 startActivity(new Intent(getApplicationContext(), FileChooserActivity.class));
                 break;
             case R.id.ivReceive:
                 startActivity(new Intent(getApplicationContext(), ReceiverActivity.class));
+                break;
+
+            case R.id.ivHistory:
+            case R.id.containerReceived:
+            case R.id.containerData:
+                break;
+            case R.id.containerLockFiles:
                 break;
         }
     }

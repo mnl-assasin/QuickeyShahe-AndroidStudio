@@ -30,7 +30,6 @@ public class FileHelper {
         File file = new File(path);
         int size = Integer.parseInt(String.valueOf(file.length() / 1024));
         float fSize = (float) size;
-
 //        return String.valueOf(size);
         Log.d(TAG, "Size: " + size);
         if (size < 1) {
@@ -42,6 +41,32 @@ public class FileHelper {
 //        else
 //            return (size / 1000000 + String.valueOf(size % 1000000).substring(0, 2)) + "GB";
         return "";
+    }
+
+    public static String getTotalFileSize(File files[]) {
+        int MB = 1024;
+        int GB = MB * MB;
+
+        float total = 0;
+
+
+        for (int ctr = 0; ctr < files.length; ctr++) {
+            File file = files[ctr];
+            float size = Float.parseFloat(String.valueOf(file.length() / 1024));
+            total += size;
+        }
+
+        if (total < 1) {
+            return total * 1000 + " Bytes";
+        } else if (total > 1 && total < MB)
+            return total + " KB";
+        else if (total > MB && total < GB)
+            return String.format(Locale.getDefault(), "%.2f", total / MB) + " MB";
+//        else
+//            return (size / 1000000 + String.valueOf(size % 1000000).substring(0, 2)) + "GB";
+        return "";
+
+
     }
 
     public static ArrayList<String> getFilesPath(Activity activity) {
