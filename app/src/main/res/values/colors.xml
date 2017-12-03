@@ -25,4 +25,7 @@
     <color name="video_duration_background">#7b000000</color>
     <color name="color2">#a1a1a1</color>
 
+    <color name="gray">#7f8182</color>
+    <color name="selectAllBackground">#f8fcff</color>
+
 </resources>

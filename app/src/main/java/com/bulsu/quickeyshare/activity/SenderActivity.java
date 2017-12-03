@@ -1,5 +1,6 @@
 package com.bulsu.quickeyshare.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -12,13 +13,17 @@ import android.widget.TextView;
 
 import com.bulsu.quickeyshare.NetworkHelper;
 import com.bulsu.quickeyshare.R;
+import com.bulsu.quickeyshare.builder.DialogBuilder;
 import com.bulsu.quickeyshare.data.Const;
 
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -28,6 +33,7 @@ import butterknife.ButterKnife;
 
 public class SenderActivity extends AppCompatActivity {
 
+    String TAG = "SenderActivity";
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -39,6 +45,8 @@ public class SenderActivity extends AppCompatActivity {
     LinearLayout layoutShareStarted;
     @Bind(R.id.activity_sender)
     LinearLayout activitySender;
+    @Bind(R.id.tvSecretKey)
+    TextView tvSecretKey;
 
 
     private Handler customHandler = new Handler();
@@ -50,6 +58,8 @@ public class SenderActivity extends AppCompatActivity {
 
     ServerSocket serverSocket;
     ServerSocketThread serverSocketThread;
+
+    String key = "";
 
 
     @Override
@@ -93,14 +103,52 @@ public class SenderActivity extends AppCompatActivity {
 
     private void initCode() {
         String ip = NetworkHelper.getIpAddress();
+        Log.d(TAG, "IP: " + ip);
         String code = ip.substring(ip.lastIndexOf(".") + 1);
         tvCode.setText(code);
+
+        key = getIntent().getStringExtra("secret");
+        tvSecretKey.setText(key);
     }
 
     private void initSocketServer() {
         serverSocketThread = new ServerSocketThread();
         serverSocketThread.start();
     }
+
+//    public class ServerSocketThread extends Thread {
+//
+//        @Override
+//        public void run() {
+//            super.run();
+//
+//            Socket socket = null;
+//            try {
+//                serverSocket = new ServerSocket(NetworkHelper.SERVER_PORT);
+//
+//                socket = serverSocket.accept();
+//
+//
+//                FileTransferThread fileTransferThread = new FileTransferThread(socket);
+//                fileTransferThread.start();
+//
+//
+////
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            } finally {
+//                if (socket != null) {
+//                    try {
+//                        socket.close();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
 
     public class ServerSocketThread extends Thread {
 
@@ -115,8 +163,29 @@ public class SenderActivity extends AppCompatActivity {
                 while (true) {
                     // start of timer;
                     socket = serverSocket.accept();
-                    FileTransferThread fileTransferThread = new FileTransferThread(socket);
-                    fileTransferThread.start();
+
+                    DataInputStream dataInputStream = null;
+                    DataOutputStream dataOutputStream = null;
+
+                    dataInputStream = new DataInputStream(socket.getInputStream());
+                    dataOutputStream = new DataOutputStream(socket.getOutputStream());
+
+                    String keyClient = dataInputStream.readUTF();
+                    Log.d("SenderActivity", "Key CLient: " + keyClient);
+
+                    if (key.equals(keyClient)) {
+                        dataOutputStream.writeUTF("KEY CONFIRM");
+                        dataOutputStream.flush();
+
+                        FileTransferThread fileTransferThread = new FileTransferThread(socket);
+                        fileTransferThread.start();
+
+                    } else {
+                        dataOutputStream.writeUTF("WRONG KEY");
+                        dataOutputStream.flush();
+                    }
+
+//
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -155,16 +224,27 @@ public class SenderActivity extends AppCompatActivity {
 
             File file = new File(Const.DEFAULT_ZIP_PATH);
 
-            byte[] bytes = new byte[(int) file.length()];
-            BufferedInputStream bis;
+            FileInputStream fis = null;
+            BufferedInputStream bis = null;
             try {
-                bis = new BufferedInputStream(new FileInputStream(file));
-                bis.read(bytes, 0, bytes.length);
-                OutputStream os = socket.getOutputStream();
-                os.write(bytes, 0, bytes.length);
-                os.flush();
-                socket.close();
 
+                fis = new FileInputStream(file);
+                bis = new BufferedInputStream(fis);
+
+                InputStream in = fis;
+                OutputStream out = socket.getOutputStream();
+
+                byte[] bytes = new byte[4096];
+                int count;
+
+                while ((count = in.read(bytes)) > 0) {
+                    out.write(bytes, 0, count);
+                }
+
+                out.close();
+                in.close();
+
+                socket.close();
                 final String sentMsg = "File sent to: " + socket.getInetAddress();
                 Log.d("FileTransfer", "FILE TRANSFER FINISHED");
                 runOnUiThread(new Runnable() {
@@ -176,18 +256,17 @@ public class SenderActivity extends AppCompatActivity {
                 });
 
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } finally {
                 try {
-                    socket.close();
+                    fis.close();
+                    bis.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
+
             }
         }
     }
@@ -203,11 +282,21 @@ public class SenderActivity extends AppCompatActivity {
         timeSwapBuff += timeInMilliseconds;
         customHandler.removeCallbacks(updateTimerThread);
         File file = new File(Const.DEFAULT_ZIP_PATH);
+
+        DialogBuilder.createDialog(SenderActivity.this, "File Sent", "File sent successfully!", "OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
         if (file.exists())
             if (file.delete())
                 Log.d("FileTransfer", "File deleted");
             else
                 Log.d("FileTransfer", "Something went wrong");
+
     }
 
     private Runnable updateTimerThread = new Runnable() {
@@ -225,5 +314,20 @@ public class SenderActivity extends AppCompatActivity {
         }
     };
 
-
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        DialogBuilder.createDialog(SenderActivity.this, "QuickeyShare", "Are you sure you want to cancel sending this files?", "Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                finish();
+            }
+        }, "Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+    }
 }

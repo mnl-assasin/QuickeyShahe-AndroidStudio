@@ -14,33 +14,28 @@
         layout="@layout/toolbar" />
 
     <ImageView
-        android:layout_width="180dp"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:adjustViewBounds="true"
         android:src="@drawable/splash" />
 
     <TextView
-        android:layout_width="280dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="An Android Application for File Sharing"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="#000"
+        android:text="An Android Application\nfor File Sharing"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="#405d7e"
         android:textStyle="bold" />
 
     <View
         android:layout_width="320dp"
-        android:layout_height="3dp"
-        android:layout_marginBottom="0.75dp"
-        android:background="@color/dividerColor" />
-
-    <View
-        android:layout_width="320dp"
-        android:layout_height="1.5dp"
+        android:layout_height="4dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/dividerColor" />
+        android:background="#a1a1a1" />
+
 
     <TextView
         android:layout_width="280dp"
@@ -49,7 +44,7 @@
         android:gravity="center"
         android:text="QKS TEAM"
         android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="#000"
+        android:textColor="#4aa9fd"
         android:textStyle="bold" />
 
     <TextView
@@ -57,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:gravity="center"
-        android:text="Gatchalian, Mikee"
+        android:text="DE GUZMAN, Arrah C."
         android:textColor="#000" />
 
     <TextView
@@ -65,7 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:gravity="center"
-        android:text="Gatchalian, Mikee"
+        android:text="GATCHALIAN, Mikee A."
         android:textColor="#000" />
 
     <TextView
@@ -73,7 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:gravity="center"
-        android:text="Guzman, Arrah"
+        android:text="MANUEL, Vinalyn C."
         android:textColor="#000" />
 
     <TextView
@@ -81,7 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:gravity="center"
-        android:text="Manuel, Vinalyn"
+        android:text="MARIÑO, Helenita C."
         android:textColor="#000" />
 
     <TextView
@@ -89,27 +84,54 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:gravity="center"
-        android:text="Mariño, Helen"
+        android:text="MORALES, Gelly Ann R."
         android:textColor="#000" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
         android:gravity="center"
         android:text="Bulacan State University"
-        android:textAppearance="?android:textAppearanceMedium"
-        android:textColor="#000"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="#405d7e"
         android:textStyle="bold" />
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:gravity="center"
-        android:text="Copyright &#169; 2017"
-        android:textColor="#000"
-        android:textStyle="bold" />
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Copyright "
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="#405d7e"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="&#169; "
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="#39a1fc"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="2017"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="#405d7e"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"

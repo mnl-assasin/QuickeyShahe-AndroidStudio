@@ -24,9 +24,67 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="How to use"
-                android:textSize="24sp"
+                android:layout_marginBottom="8dp"
+                android:text="How to connect Android devices?"
+                android:textColor="#39a1fc"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Put the sender and receiver in the same network connection via WLAN or hotspot. This could be done through setting up WLAN or hotspot by the sender and connect the receiver to this hotspot."
+                android:textColor="#000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="How to send file?"
+                android:textColor="#39a1fc"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Tap \'Send\' on home page and select the files you want to share, touch \'Selected\' then wait for the receiver."
+                android:textColor="#000" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="How to receive files?"
+                android:textColor="#39a1fc"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Tap \'Receive\' on home page and wait for the code that will appear on the sender\'s screen. Type the code on the Receiveer Activity then tap \'Connect\'"
+                android:textColor="#000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="Where can I find the received files?"
+                android:textColor="#39a1fc"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="By touching the \'Receive\' icon on the home page. You will be able to see the files that have been received. In able to access the received files, go to Internal Storage or Device Storage then find the folder named QuickeyShare."
+                android:textColor="#000" />
 
 
         </LinearLayout>

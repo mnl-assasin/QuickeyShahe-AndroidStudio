@@ -2,9 +2,7 @@ package com.bulsu.quickeyshare.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
 import android.media.ThumbnailUtils;
-import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +16,6 @@ import com.bulsu.quickeyshare.R;
 import com.bulsu.quickeyshare.data.FileHelper;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -74,7 +70,7 @@ public class VideoAdapter extends BaseAdapter {
 
         Bitmap bmpVidPrev = ThumbnailUtils.createVideoThumbnail(path, MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
         holder.ivVidPreview.setImageBitmap(bmpVidPrev);
-        holder.tvDuration.setText(getVideoDuration(path));
+//        holder.tvDuration.setText(getVideoDuration(path));
         holder.tvFilename.setText(FileHelper.getFilename(path));
         holder.tvFileSize.setText(FileHelper.getFileSize(path));
 //        holder.layoutItem.setOnClickListener(new View.OnClickListener() {
@@ -111,20 +107,7 @@ public class VideoAdapter extends BaseAdapter {
         }
     }
 
-    public String getVideoDuration(String path) {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(ctx, Uri.parse(path));
-        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-        long millis = Long.parseLong(time);
 
-        return String.format(Locale.getDefault(), "%02d:%02d:%02d",
-                TimeUnit.MILLISECONDS.toHours(millis),
-                TimeUnit.MILLISECONDS.toMinutes(millis) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-                TimeUnit.MILLISECONDS.toSeconds(millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-
-    }
 
 
 }

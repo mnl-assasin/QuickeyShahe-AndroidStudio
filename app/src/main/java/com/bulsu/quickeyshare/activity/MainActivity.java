@@ -4,11 +4,8 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -32,21 +29,7 @@ import com.bulsu.quickeyshare.data.Const;
 import com.bulsu.quickeyshare.data.EZSharedPrefences;
 import com.bulsu.quickeyshare.data.FileHelper;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-
-import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -59,12 +42,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private static final int PERMISSION_CALLBACK_CONSTANT = 100;
     private static final int REQUEST_PERMISSION_SETTING = 101;
-    String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE};
     @Bind(R.id.ivSend)
     ImageView ivSend;
     @Bind(R.id.ivReceive)
     ImageView ivReceive;
+
     @Bind(R.id.activity_main)
     RelativeLayout activityMain;
     @Bind(R.id.navigationView)
@@ -75,8 +59,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ActionBarDrawerToggle actionBarDrawerToggle;
     @Bind(R.id.ivDrawer)
     ImageView ivDrawer;
-    @Bind(R.id.ivHistory)
-    ImageView ivHistory;
+    @Bind(R.id.ivLock)
+    ImageView ivLock;
     @Bind(R.id.tvReceived)
     TextView tvReceived;
     @Bind(R.id.containerReceived)
@@ -105,8 +89,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initialized() {
         setupNavigation();
-
-
     }
 
     private void initData() {
@@ -121,9 +103,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (dirFiles.length > 0) {
                 tvReceived.setText(String.valueOf(dirFiles.length));
                 tvData.setText(FileHelper.getTotalFileSize(dirFiles));
+                Log.d(TAG, "Count: " + dirFiles.length);
             }
-        Log.d(TAG, "Count: " + dirFiles.length);
+//        Log.d(TAG, "Count: " + dirFiles.length);
 
+
+        File vault = new File(Const.DEFAULT_VAULT_PATH);
+        File[] vaultFiles = null;
+        if (vault != null)
+            if (vault.exists())
+                vaultFiles = vault.listFiles();
+
+        if (vaultFiles != null)
+            if (vaultFiles.length > 0) {
+                tvLockedFiles.setText(String.valueOf(vaultFiles.length));
+                Log.d(TAG, "Count: " + vaultFiles.length);
+            }
     }
 
     private void setupNavigation() {
@@ -162,6 +157,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.menu_about:
                 startActivity(new Intent(getApplicationContext(), AboutActivity.class));
                 break;
+            case R.id.menu_help:
+                startActivity(new Intent(getApplicationContext(), HelpActivity.class));
+                break;
+            case R.id.menu_exit:
+                displayExitDialog();
         }
 
         drawerLayout.closeDrawers();
@@ -169,14 +169,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    private void displayExitDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("QuickeyShare").setMessage("Are you sure you want to Exit?").setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        }).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+        displayExitDialog();
+    }
+
     private void checkPermissions() {
         if (ActivityCompat.checkSelfPermission(MainActivity.this, REQUIRED_PERMISSIONS[0]) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(MainActivity.this, REQUIRED_PERMISSIONS[1]) != PackageManager.PERMISSION_GRANTED) {
+                || ActivityCompat.checkSelfPermission(MainActivity.this, REQUIRED_PERMISSIONS[1]) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(this, REQUIRED_PERMISSIONS[2]) != PackageManager.PERMISSION_GRANTED) {
 
             if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[0])
-                    || ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[1])) {
+                    || ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[1])
+                    || ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[2])) {
 
-                //Show Information about why you need the permission
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                 builder.setTitle("Need Multiple Permissions");
                 builder.setMessage("This app needs read and write storage permissions.");
@@ -226,7 +249,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             Log.d(TAG, "Permissions required?");
 //            txtPermissions.setText("Permissions Required");
-
 //            SharedPreferences.Editor editor = permissionStatus.edit();
 //            editor.putBoolean(REQUIRED_PERMISSIONS[0],true);
 //            editor.commit();
@@ -259,7 +281,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //                proceedAfterPermission();
                 initData();
             } else if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[0])
-                    || ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[1])) {
+                    || ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[1])
+                    || ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, REQUIRED_PERMISSIONS[2])) {
                 //txtPermissions.setText("Permissions Required");
                 Log.d(TAG, mTAG + "All Permissions required");
                 AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -290,146 +313,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_PERMISSION_SETTING) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, REQUIRED_PERMISSIONS[0]) == PackageManager.PERMISSION_GRANTED) {
-                //Got Permission
-//                proceedAfterPermission();
+                //                proceedAfterPermission();
                 Log.d(TAG, "onActivityResult: proceed to after permission process");
-//                proceedAfterPermission();
                 initData();
 
             }
         }
     }
 
-
-    byte[] key, iv;
-
-    private void test() {
-        // Get key
-        key = getKey();
-        // Get IV
-        iv = getIV();
-
-    }
-
-
-    public void encryptFile(View view) {
-        Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory() + "/img.png");
-        // Write image data to ByteArrayOutputStream
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        // Encrypt and save the image
-        saveFile(encrypt(key, baos.toByteArray()), "enimg.png");
-    }
-
-
-    public void decryptFile(View view) {
-        try {
-            // Create FileInputStream to read from the encrypted image file
-            FileInputStream fis = new FileInputStream(Environment.getExternalStorageDirectory() + "/enimg.png");
-            // Save the decrypted image
-            saveFile(decrypt(key, fis), "deimg.png");
-        } catch (FileNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
-
-
-    public void saveFile(byte[] data, String outFileName) {
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(Environment.getExternalStorageDirectory() + File.separator + outFileName);
-            fos.write(data);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private byte[] encrypt(byte[] skey, byte[] data) {
-        SecretKeySpec skeySpec = new SecretKeySpec(skey, "AES");
-        Cipher cipher;
-        byte[] encrypted = null;
-        try {
-            // Get Cipher instance for AES algorithm
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            // Initialize cipher
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, new IvParameterSpec(iv));
-            // Encrypt the image byte data
-            encrypted = cipher.doFinal(data);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return encrypted;
-    }
-
-    private byte[] decrypt(byte[] skey, FileInputStream fis) {
-
-        SecretKeySpec skeySpec = new SecretKeySpec(skey, "AES");
-
-        Cipher cipher;
-        byte[] decryptedData = null;
-        CipherInputStream cis = null;
-        try {
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(iv));
-            // Create CipherInputStream to read and decrypt the image data
-            cis = new CipherInputStream(fis, cipher);
-            // Write encrypted image data to ByteArrayOutputStream
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            byte[] data = new byte[2048];
-            while ((cis.read(data)) != -1) {
-                buffer.write(data);
-            }
-            buffer.flush();
-            decryptedData = buffer.toByteArray();
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fis.close();
-                cis.close();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        return decryptedData;
-    }
-
-    private byte[] getKey() {
-        KeyGenerator keyGen;
-        byte[] dataKey = null;
-
-        try {
-            // Generate 256-bit key
-            keyGen = KeyGenerator.getInstance("AES");
-            keyGen.init(256);
-            SecretKey secretKey = keyGen.generateKey();
-            dataKey = secretKey.getEncoded();
-        } catch (NoSuchAlgorithmException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return dataKey;
-    }
-
-    private byte[] getIV() {
-        SecureRandom random = new SecureRandom();
-        byte[] iv = random.generateSeed(16);
-        return iv;
-    }
-
-
-    @OnClick({R.id.ivDrawer, R.id.ivHistory, R.id.ivSend, R.id.ivReceive, R.id.tvReceived, R.id.containerReceived, R.id.containerData, R.id.containerLockFiles})
+    @OnClick({R.id.ivDrawer, R.id.ivLock, R.id.ivSend, R.id.ivReceive, R.id.tvReceived, R.id.containerReceived, R.id.containerData, R.id.containerLockFiles})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ivDrawer:
@@ -442,13 +334,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.ivReceive:
                 startActivity(new Intent(getApplicationContext(), ReceiverActivity.class));
                 break;
-
-            case R.id.ivHistory:
+            case R.id.ivLock:
+                onLockFilesClick();
+                break;
             case R.id.containerReceived:
             case R.id.containerData:
+                startActivity(new Intent(getApplicationContext(), ReceiveFilesActivity.class));
                 break;
             case R.id.containerLockFiles:
+                onLockFilesClick();
                 break;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initData();
+    }
+
+    private void onLockFilesClick() {
+//        EZSharedPrefences.setPinCode(this, "");
+        String pin = EZSharedPrefences.getPinCode(this);
+        String answer = EZSharedPrefences.getSecAnswer(this);
+        if (pin.equals("") && answer.equals(""))
+            startActivity(new Intent(this, NominatePinActivity.class));
+        else
+            startActivity(new Intent(this, PinActivity.class));
     }
 }

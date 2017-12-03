@@ -173,6 +173,7 @@ public class FileChooserFragment extends Fragment {
                 Log.d(TAG, "Compression successful");
 //                Toast.makeText(getApplicationContext(), "Compression Successful", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getActivity(), SenderActivity.class));
+                getActivity().finish();
             } else {
                 Log.d(TAG, "Compression FAILED");
                 Toast.makeText(getActivity(), Const.ERROR_MESSAGE, Toast.LENGTH_LONG).show();

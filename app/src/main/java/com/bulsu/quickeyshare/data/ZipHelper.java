@@ -62,7 +62,7 @@ public class ZipHelper {
             is = new FileInputStream(path + zipname);
             zis = new ZipInputStream(new BufferedInputStream(is));
             ZipEntry ze;
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[2048];
             int count;
 
             while ((ze = zis.getNextEntry()) != null) {

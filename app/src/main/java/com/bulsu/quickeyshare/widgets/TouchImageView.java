@@ -1,4 +1,4 @@
-package com.bulsu.mathpad.widgets;
+package com.bulsu.quickeyshare.widgets;
 
 import android.annotation.TargetApi;
 import android.content.Context;

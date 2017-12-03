@@ -31,19 +31,19 @@
                 android:src="@drawable/ic_menu" />
 
             <ImageView
-                android:layout_width="72dp"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:adjustViewBounds="true"
                 android:src="@drawable/qks" />
 
             <ImageView
-                android:id="@+id/ivHistory"
+                android:id="@+id/ivLock"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:src="@drawable/ic_clock" />
+                android:src="@drawable/lock" />
         </RelativeLayout>
 
         <LinearLayout
@@ -68,11 +68,14 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="32dp">
+            android:layout_marginBottom="16dp"
+            android:background="#7cc1fe"
+            android:gravity="center"
+            android:padding="32dp">
 
             <LinearLayout
                 android:id="@+id/containerReceived"
@@ -83,26 +86,27 @@
 
 
                 <ImageView
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:src="@drawable/ic_storage" />
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/bottom_receive" />
 
                 <TextView
                     android:id="@+id/tvReceived"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="0"
                     android:textColor="#fff"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Received"
                     android:textColor="#fff"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -115,19 +119,20 @@
 
 
                 <ImageView
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:src="@drawable/ic_storage" />
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/bottom_data" />
 
                 <TextView
                     android:id="@+id/tvData"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="099.00 KB"
+                    android:text="000.00 KB"
                     android:textColor="#fff"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textStyle="" />
 
                 <TextView
@@ -135,7 +140,7 @@
                     android:layout_height="wrap_content"
                     android:text="Data"
                     android:textColor="#fff"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -147,19 +152,20 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:src="@drawable/ic_storage" />
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/bottom_locked" />
 
                 <TextView
                     android:id="@+id/tvLockedFiles"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:text="0"
                     android:textColor="#fff"
-                    android:textSize="14sp"
+                    android:textSize="16sp"
                     android:textStyle="" />
 
                 <TextView
@@ -167,7 +173,7 @@
                     android:layout_height="wrap_content"
                     android:text="Lock Files"
                     android:textColor="#fff"
-                    android:textSize="11sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>

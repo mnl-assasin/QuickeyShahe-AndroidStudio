@@ -37,7 +37,7 @@ public class RequestPermissions extends AppCompatActivity {
         setContentView(R.layout.activity_request_permissions);
 
         checkPermissions();
-//        Log.d(TAG, "absolute path: " + Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator);
+//        Log.d(TAG, "absolute filePath: " + Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator);
 //        createDirectory();
 
 //        startActivity(new Intent(getApplicationContext(), ReadFileActivity.class));

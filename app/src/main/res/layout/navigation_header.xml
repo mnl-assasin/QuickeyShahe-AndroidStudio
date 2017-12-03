@@ -6,33 +6,25 @@
     android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/splash" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/civProfilePic"
         android:layout_width="76dp"
         android:layout_height="76dp"
-        android:layout_above="@+id/tvUsername"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="24dp"
         android:layout_marginStart="24dp"
         android:src="@drawable/img_profile_white"
+        android:visibility="invisible"
         app:civ_border_color="@android:color/white"
         app:civ_border_width="1dp" />
-
-
-    <TextView
-        android:id="@+id/tvUsername"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/civProfilePic"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/civProfilePic"
-        android:layout_marginBottom="16dp"
-        android:gravity="left"
-        android:text="Username"
-        android:textColor="@color/textColorLight"
-        android:textSize="14sp" />
 
 
 </RelativeLayout>

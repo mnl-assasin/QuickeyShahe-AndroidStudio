@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -46,6 +47,10 @@ public class VideoChooserFragment extends Fragment {
     List<String> allPath;
     List<String> selectedPath;
     VideoAdapter adapter;
+    @Bind(R.id.ivSelectAll)
+    ImageView ivSelectAll;
+    @Bind(R.id.layoutSelectAll)
+    LinearLayout layoutSelectAll;
 
 
     public VideoChooserFragment() {
@@ -106,23 +111,31 @@ public class VideoChooserFragment extends Fragment {
     }
 
 
+
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
 
-    @OnClick(R.id.btnProceed)
-    public void onClick() {
+    @OnClick({R.id.layoutSelectAll, R.id.btnProceed})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.layoutSelectAll:
+                break;
+            case R.id.btnProceed:
 
-        if (selectedPath.size() > 0) {
-            FileHelper.logList("Selected", selectedPath);
-            String files[] = selectedPath.toArray(new String[selectedPath.size()]);
-            new CompressAsyncTask(files).execute();
-        } else {
-            Toast.makeText(getActivity(), "Select files to share", Toast.LENGTH_LONG).show();
+                if (selectedPath.size() > 0) {
+                    FileHelper.logList("Selected", selectedPath);
+                    String files[] = selectedPath.toArray(new String[selectedPath.size()]);
+                    new CompressAsyncTask(files).execute();
+                } else {
+                    Toast.makeText(getActivity(), "Select files to share", Toast.LENGTH_LONG).show();
+                 }
+
+                break;
         }
-
     }
 
     private class CompressAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -159,6 +172,7 @@ public class VideoChooserFragment extends Fragment {
                 Log.d(TAG, "Compression successful");
 //                Toast.makeText(getApplicationContext(), "Compression Successful", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(getActivity(), SenderActivity.class));
+
             } else {
                 Log.d(TAG, "Compression FAILED");
                 Toast.makeText(getActivity(), Const.ERROR_MESSAGE, Toast.LENGTH_LONG).show();

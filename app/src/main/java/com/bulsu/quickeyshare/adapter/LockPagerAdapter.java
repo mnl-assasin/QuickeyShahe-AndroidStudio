@@ -5,17 +5,17 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.bulsu.quickeyshare.fragment.BaseFileChooserFragment;
+import com.bulsu.quickeyshare.fragment.BaseLockChooserFragment;
 
 /**
  * Created by mykelneds on 17/02/2017.
  */
 
-public class MainPagerAdapter extends FragmentStatePagerAdapter {
+public class LockPagerAdapter extends FragmentStatePagerAdapter {
 
     CharSequence titles[];
 
-    public MainPagerAdapter(FragmentManager fm, CharSequence[] titles) {
+    public LockPagerAdapter(FragmentManager fm, CharSequence[] titles) {
         super(fm);
         this.titles = titles;
     }
@@ -26,28 +26,16 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
 
         Bundle b = new Bundle();
-        b.putInt("category", position);
+        b.putInt("category", position+1);
 
-//        switch (position) {
-//
-//            case 0:
-//                return new FileChooserFragment();
-//            case 1:
-//                return new VideoChooserFragment();
-//            case 2:
-//                return new ImageChooserFragment();
-//            case 3:
-//                return new MusicChooserFragment();
-//        }
-
-        BaseFileChooserFragment fragment = new BaseFileChooserFragment();
+        BaseLockChooserFragment fragment = new BaseLockChooserFragment();
         fragment.setArguments(b);
         return fragment;
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return 2;
     }
 
     @Override
